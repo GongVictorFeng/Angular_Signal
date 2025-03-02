@@ -11,5 +11,16 @@ import {GetCoursesResponse} from "../models/get-courses.response";
 })
 export class CoursesService {
 
+  env = environment;
+
+  constructor(private http: HttpClient) {
+  }
+
+  async loadAllCourses(): Promise<Course[]> {
+    const courses$ = this.http.get<GetCoursesResponse>(`${this.env.apiRoot}/courses`);
+    const response = await firstValueFrom(courses$);
+    return response.courses
+  }
+
 
 }
