@@ -58,7 +58,7 @@ export class EditCourseDialogComponent implements OnInit {
       this.dialogRef.close(updatedCourse);
     }
     catch(err) {
-      console.log(err);
+      console.error(err);
       alert('Failed to save the course.')
     }
   }
