@@ -11,11 +11,15 @@
       <courses-card-list 
         [courses]="beginnerCourses()" 
         (courseUpdated)="onCourseUpdated($event)"
-        />
+        (courseDeleted)="onCourseDeleted($event)"
+      />
     </mat-tab>
 
     <mat-tab label="Advanced">
-      <courses-card-list [courses]="advancedCourses()"/>
+      <courses-card-list 
+        [courses]="advancedCourses()"
+        (courseUpdated)="onCourseUpdated($event)"
+      />
     </mat-tab>
   </mat-tab-group>
 
