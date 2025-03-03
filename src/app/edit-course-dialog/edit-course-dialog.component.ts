@@ -28,7 +28,8 @@ export class EditCourseDialogComponent implements OnInit {
       private dialog: MatDialog, 
       private dialogRef: MatDialogRef<EditCourseDialogComponent>,
       @Inject(MAT_DIALOG_DATA) public data: EditCourseDialogData,
-      private fb: FormBuilder
+      private fb: FormBuilder,
+      private coursesService: CoursesService
     ) {}
 
   ngOnInit(): void {
@@ -42,6 +43,24 @@ export class EditCourseDialogComponent implements OnInit {
 
   onClose() {
     this.dialogRef.close();
+  }
+
+  async onSave() {
+    const courseProps = this.form.value as Partial<Course>;
+    if (this.data.mode === 'update') {
+      await this.saveCourse(this.data.course!.id, courseProps)
+    }
+  }
+
+  private async saveCourse(courseId: string, changes: Partial<Course>) {
+    try {
+      const updatedCourse = await this.coursesService.saveCourse(courseId, changes);
+      this.dialogRef.close(updatedCourse);
+    }
+    catch(err) {
+      console.log(err);
+      alert('Failed to save the course.')
+    }
   }
 
 }

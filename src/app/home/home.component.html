@@ -8,7 +8,10 @@
 
   <mat-tab-group>
     <mat-tab label="Beginners">
-      <courses-card-list [courses]="beginnerCourses()" />
+      <courses-card-list 
+        [courses]="beginnerCourses()" 
+        (courseUpdated)="onCourseUpdated($event)"
+        />
     </mat-tab>
 
     <mat-tab label="Advanced">

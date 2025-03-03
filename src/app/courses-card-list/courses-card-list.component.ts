@@ -15,6 +15,7 @@ import { openEditCourseDialog } from '../edit-course-dialog/edit-course-dialog.c
 export class CoursesCardListComponent {
 
     courses = input.required<Course[]>();   
+    courseUpdated = output<Course>();
     
     constructor(private dialog: MatDialog) {}
 
@@ -25,6 +26,7 @@ export class CoursesCardListComponent {
             course: course
         });
         console.log('Course edited:', newCourse);
+        this.courseUpdated.emit(newCourse);
     }
 }
 
