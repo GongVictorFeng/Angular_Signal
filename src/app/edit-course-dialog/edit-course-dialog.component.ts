@@ -48,7 +48,21 @@ export class EditCourseDialogComponent implements OnInit {
   async onSave() {
     const courseProps = this.form.value as Partial<Course>;
     if (this.data.mode === 'update') {
-      await this.saveCourse(this.data.course!.id, courseProps)
+      await this.saveCourse(this.data.course!.id, courseProps);
+    }
+    else if (this.data.mode === 'create') {
+      await this.createCourse(courseProps);
+    }
+  }
+
+  private async createCourse(course: Partial<Course>) {
+    try {
+      const newCourse = await this.coursesService.createCourse(course);
+      this.dialogRef.close(newCourse);
+    } 
+    catch (error) {
+      console.error(error);
+      alert('Failed to create the course.')
     }
   }
 

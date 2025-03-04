@@ -4,6 +4,8 @@ import {MatTab, MatTabGroup} from "@angular/material/tabs";
 import {CoursesCardListComponent} from "../courses-card-list/courses-card-list.component";
 import { CoursesServiceWithFetch } from '../services/courses-fetch.service';
 import { CoursesService } from '../services/courses.service';
+import { MatDialog } from '@angular/material/dialog';
+import { openEditCourseDialog } from '../edit-course-dialog/edit-course-dialog.component';
 
 @Component({
     selector: 'home',
@@ -22,7 +24,7 @@ export class HomeComponent {
     beginnerCourses = computed(() => this.#courses().filter(course => course.category === 'BEGINNER'));
     advancedCourses = computed(() => this.#courses().filter(course => course.category === 'ADVANCED'));
 
-    constructor(private coursesService: CoursesService) {
+    constructor(private coursesService: CoursesService, private dialog: MatDialog) {
 
         effect(() => {
             console.log('Beginner courses', this.beginnerCourses());
@@ -47,6 +49,18 @@ export class HomeComponent {
     onCourseUpdated(updatedCourse: Course) {
         const courses = this.#courses();
         const newCourses = courses.map(course => course.id === updatedCourse.id ? updatedCourse : course);
+        this.#courses.set(newCourses);
+    }
+
+    async onAddCourse() {
+        const newCourse = await openEditCourseDialog(
+            this.dialog, 
+            {
+                mode: 'create',
+                title: "Create New Course"
+            }
+        );
+        const newCourses = [...this.#courses(), newCourse];
         this.#courses.set(newCourses);
     }
 
