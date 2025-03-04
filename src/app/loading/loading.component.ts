@@ -10,6 +10,10 @@ import {LoadingService} from "./loading.service";
 })
 export class LoadingIndicatorComponent {
 
+    loading!: Signal<boolean>
 
+    constructor(private loadingService: LoadingService) {
+        this.loading = this.loadingService.loading;
+    }
 
 }
