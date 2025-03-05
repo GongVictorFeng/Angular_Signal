@@ -18,7 +18,17 @@ export class AuthService {
 
   isLoggedIn = computed(() => !!this.user());
 
-  constructor(private httpService: HttpClient, private router: Router){}
+  constructor(private httpService: HttpClient, private router: Router){
+
+    const userLoaded = this.loadUserFromStorage();
+
+    effect(() => {
+      const user = this.user();
+      if(user && !userLoaded) {
+        localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
+      }
+    })
+  }
 
   async login(email: string, password: string): Promise<User> {
     const user$ = this.httpService.post<User>(`${environment.apiRoot}/login`, {
@@ -32,7 +42,18 @@ export class AuthService {
   }
 
   async logout() {
+    localStorage.removeItem(USER_STORAGE_KEY);
     this.#userSignal.set(null);
     await this.router.navigateByUrl('/login');
+  }
+
+  private loadUserFromStorage(): boolean {
+    const json = localStorage.getItem(USER_STORAGE_KEY);
+    if(json) {
+      const user = JSON.parse(json);
+      this.#userSignal.set(user);
+      return true;
+    }
+    return false;
   }
 }
