@@ -18,7 +18,7 @@ export class AuthService {
 
   isLoggedIn = computed(() => !!this.user());
 
-  constructor(private httpService: HttpClient){}
+  constructor(private httpService: HttpClient, private router: Router){}
 
   async login(email: string, password: string): Promise<User> {
     const user$ = this.httpService.post<User>(`${environment.apiRoot}/login`, {
@@ -29,5 +29,10 @@ export class AuthService {
     const user = await firstValueFrom(user$);
     this.#userSignal.set(user);
     return user;
+  }
+
+  async logout() {
+    this.#userSignal.set(null);
+    await this.router.navigateByUrl('/login');
   }
 }
