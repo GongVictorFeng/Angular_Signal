@@ -6,6 +6,7 @@ import { CoursesServiceWithFetch } from '../services/courses-fetch.service';
 import { CoursesService } from '../services/courses.service';
 import { MatDialog } from '@angular/material/dialog';
 import { openEditCourseDialog } from '../edit-course-dialog/edit-course-dialog.component';
+import { MessagesService } from '../messages/messages.service';
 
 @Component({
     selector: 'home',
@@ -24,7 +25,7 @@ export class HomeComponent {
     beginnerCourses = computed(() => this.#courses().filter(course => course.category === 'BEGINNER'));
     advancedCourses = computed(() => this.#courses().filter(course => course.category === 'ADVANCED'));
 
-    constructor(private coursesService: CoursesService, private dialog: MatDialog) {
+    constructor(private coursesService: CoursesService, private dialog: MatDialog, private messageService: MessagesService) {
 
         effect(() => {
             console.log('Beginner courses', this.beginnerCourses());
@@ -40,9 +41,9 @@ export class HomeComponent {
             const courses = await this.coursesService.loadAllCourses();
             this.#courses.set(courses.sort(sortCoursesBySeqNo));
         }
-        catch(error) {
-            alert("Error loading courses");
-            console.error("Error loading courses", error);
+        catch(err) {
+            this.messageService.showMessage("Error loading courses", "error")
+            console.error(err);
         }
     }
 
@@ -72,8 +73,8 @@ export class HomeComponent {
             this.#courses.set(newCourses);
         }
         catch(err) {
+            this.messageService.showMessage("Error deleting courses", "error")
             console.error(err);
-            alert('Error deleting course')
         }
     }
 }

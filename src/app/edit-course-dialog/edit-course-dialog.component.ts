@@ -8,6 +8,7 @@ import {FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {CourseCategoryComboboxComponent} from "../course-category-combobox/course-category-combobox.component";
 import {CourseCategory} from "../models/course-category.model";
 import { firstValueFrom } from 'rxjs';
+import { MessagesService } from '../messages/messages.service';
 
 @Component({
   selector: 'edit-course-dialog',
@@ -29,7 +30,8 @@ export class EditCourseDialogComponent implements OnInit {
       private dialogRef: MatDialogRef<EditCourseDialogComponent>,
       @Inject(MAT_DIALOG_DATA) public data: EditCourseDialogData,
       private fb: FormBuilder,
-      private coursesService: CoursesService
+      private coursesService: CoursesService,
+      private messageService: MessagesService
     ) {}
 
   ngOnInit(): void {
@@ -60,9 +62,9 @@ export class EditCourseDialogComponent implements OnInit {
       const newCourse = await this.coursesService.createCourse(course);
       this.dialogRef.close(newCourse);
     } 
-    catch (error) {
-      console.error(error);
-      alert('Failed to create the course.')
+    catch (err) {
+      this.messageService.showMessage("Failed to create the course.", 'error');
+      console.error(err);
     }
   }
 
@@ -72,8 +74,8 @@ export class EditCourseDialogComponent implements OnInit {
       this.dialogRef.close(updatedCourse);
     }
     catch(err) {
+      this.messageService.showMessage("Failed to save the course.", 'error');
       console.error(err);
-      alert('Failed to save the course.')
     }
   }
 
