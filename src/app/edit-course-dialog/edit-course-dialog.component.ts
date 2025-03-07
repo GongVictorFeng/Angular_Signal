@@ -24,6 +24,7 @@ import { MessagesService } from '../messages/messages.service';
 export class EditCourseDialogComponent implements OnInit {
 
   form!: FormGroup;
+  category = signal<CourseCategory>("BEGINNER");
 
   constructor(
       private dialog: MatDialog, 
@@ -32,15 +33,19 @@ export class EditCourseDialogComponent implements OnInit {
       private fb: FormBuilder,
       private coursesService: CoursesService,
       private messageService: MessagesService
-    ) {}
+    ) {
+      effect(() => {
+        console.log(`Course category bi-directional binding: ${this.category()}`)
+      })
+    }
 
   ngOnInit(): void {
     this.form = this.fb.group({
       title: this.data.course?.title,
       longDescription: this.data.course?.longDescription,
-      category: this.data.course?.category,
       iconUrl: this.data.course?.iconUrl
     })
+    this.category.set(this.data.course?.category ?? "BEGINNER");
   }
 
   onClose() {
@@ -49,6 +54,7 @@ export class EditCourseDialogComponent implements OnInit {
 
   async onSave() {
     const courseProps = this.form.value as Partial<Course>;
+    courseProps.category = this.category();
     if (this.data.mode === 'update') {
       await this.saveCourse(this.data.course!.id, courseProps);
     }
