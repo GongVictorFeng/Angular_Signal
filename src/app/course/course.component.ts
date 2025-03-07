@@ -18,7 +18,7 @@ export class CourseComponent implements OnInit{
 
   constructor(private route: ActivatedRoute) {}
   ngOnInit(): void {
-    const course = this.route.snapshot.data['course'];
-    this.course.set(course);
+    this.course.set(this.route.snapshot.data['course']);
+    this.lessons.set(this.route.snapshot.data['lessons'])
   }
 }
