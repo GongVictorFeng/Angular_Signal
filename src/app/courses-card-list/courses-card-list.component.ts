@@ -26,8 +26,11 @@ export class CoursesCardListComponent {
             title: "Update Existing Course",
             course: course
         });
-        console.log('Course edited:', newCourse);
-        this.courseUpdated.emit(newCourse);
+
+        if(newCourse) {
+            console.log('Course edited:', newCourse);
+            this.courseUpdated.emit(newCourse);
+        }
     }
 
     onCourseDeleted(courseId: string) {

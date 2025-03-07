@@ -61,8 +61,11 @@ export class HomeComponent {
                 title: "Create New Course"
             }
         );
-        const newCourses = [...this.#courses(), newCourse];
-        this.#courses.set(newCourses);
+        
+        if (newCourse) {
+            const newCourses = [...this.#courses(), newCourse];
+            this.#courses.set(newCourses);
+        }
     }
 
     async onCourseDeleted(courseId: string) {
